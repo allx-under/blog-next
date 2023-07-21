@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import ProvidersLogin from "./ProvidersLogin";
 
 interface AuthFormProps {
   isLogin?: boolean;
@@ -37,7 +38,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => {
       axios
         .post("/api/register", data)
         .then(() => {
-          router.push("/login");
+          router.push("/profile");
         })
         .catch((e) => {
           toast.error("Something went wrong");
@@ -51,7 +52,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => {
           }
           if (callback?.ok && !callback?.error) {
             toast.success("Logged in");
-            router.push("/");
+            router.push("/profile");
+            router.refresh();
           }
         })
         .finally(() => setIsLoading(false));
@@ -95,7 +97,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => {
           disabled={isLoading}
         />
       </form>
-      <div>
+
+      <div className="border-b pb-4 border-slate-800">
         {!isLogin ? (
           <p className="text-center text-slate-900">
             Already exist?{" "}
@@ -118,6 +121,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => {
           </p>
         )}
       </div>
+      <ProvidersLogin />
     </div>
   );
 };
