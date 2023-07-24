@@ -5,7 +5,6 @@ import MainContainerWithBg from "../components/MainContainerWithBg";
 import Header from "../components/Header";
 import AuthContext from "../context/AuthContext";
 import ToasterContext from "../context/ToasterContext";
-import PrivateRoute from "../components/HOC/PrivateRoute";
 
 const inter = Chakra_Petch({ subsets: ["latin"], weight: "400" });
 

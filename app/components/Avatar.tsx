@@ -6,7 +6,7 @@ interface AvatarProps {
 }
 const Avatar: React.FC<AvatarProps> = ({ src }) => {
   return (
-    <div className="relative inline-block rounded-full overflow-hidden h-9 w-9 md:h-11 md:w-11 border border-slate-600">
+    <div className="relative flex items-center rounded-full overflow-hidden h-9 w-9 md:h-11 md:w-11 border border-slate-600">
       <Image
         alt="avatar"
         src={src ?? "/images/profile.jpeg"}

@@ -21,8 +21,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ isLogin }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    setValue,
   } = useForm<FieldValues>({
     defaultValues: {
       username: "",

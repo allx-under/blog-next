@@ -1,9 +1,11 @@
 import getUserById from "@/app/actions/getUserById";
 import Avatar from "@/app/components/Avatar";
+import Button from "@/app/components/Button";
 import dateConverter from "@/app/utils/dateConverter";
 import { Post } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
+import MoreButton from "./MoreButton";
 
 interface PostItemProps {
   post: Post;
@@ -38,12 +40,21 @@ const PostItem: React.FC<PostItemProps> = async ({ post, isLeft }) => {
           isLeft ? "ml-auto" : "mr-auto"
         } flex flex-col justify-between`}
       >
-        <p className="text-md text-slate-600 mt-5">{post.description}</p>
+        <div>
+          {" "}
+          <p className="text-lg text-slate-800 mt-5 mb-3">
+            {post.description.substring(
+              0,
+              Math.min(post.description.length, 230)
+            ) + "..."}
+          </p>
+          <MoreButton href={post?.id} text="Read more" />
+        </div>
         <div className="flex items-center">
           <Avatar src={user?.image} />
-          <div className="text-md text-slate-800 ml-2">
+          <div className="text-sm text-slate-800 ml-2">
             <p>by {user?.name}</p>
-            <p className="text-sm text-slate-700">
+            <p className="text-xs text-slate-700">
               Created:{" "}
               <span className=" text-slate-800">
                 {dateConverter(post.createdAt.toString())}

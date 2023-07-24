@@ -1,7 +1,4 @@
-import PublicRoute from "@/app/components/HOC/PublicRoute";
-import SectionContainer from "@/app/components/SectionContainer";
 import AuthForm from "@/app/components/auth/AuthForm";
-import React from "react";
 
 const LoginPage = () => {
   return (

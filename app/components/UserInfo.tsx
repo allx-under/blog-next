@@ -26,7 +26,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ email, image }) => {
       </div>
       <div
         onClick={() => signOut()}
-        className="h-9 w-9 md:h-11 md:w-11 rounded-full border flex justify-center items-center ml-2 cursor-pointer hover:bg-slate-800/30 relative group transition"
+        className="h-9 w-9 md:h-11 md:w-11 rounded-full flex justify-center items-center ml-2 cursor-pointer hover:bg-slate-800/30 relative group transition"
       >
         <FiLogOut size={26} />
         <span className="hidden group-hover:block absolute text-sm -bottom-4 left-0 text-gray-600">
