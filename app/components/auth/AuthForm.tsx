@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Input from "./Input";
+import Input from "../inputs/Input";
 import Button from "../Button";
 import { useRouter } from "next/navigation";
 import axios from "axios";

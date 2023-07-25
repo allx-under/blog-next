@@ -46,7 +46,7 @@ model Post {
   userId String @db.ObjectId
   title String
   description String
-  image String?
+  image String
   category String
   createdAt DateTime @default(now())
   

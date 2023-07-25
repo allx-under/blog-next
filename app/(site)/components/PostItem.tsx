@@ -1,19 +1,35 @@
+"use client";
 import getUserById from "@/app/actions/getUserById";
 import Avatar from "@/app/components/Avatar";
-import Button from "@/app/components/Button";
+
 import dateConverter from "@/app/utils/dateConverter";
-import { Post } from "@prisma/client";
+import { Post, User } from "@prisma/client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MoreButton from "./MoreButton";
+import axios from "axios";
+import AuthorInfo from "@/app/components/AuthorInfo";
 
 interface PostItemProps {
   post: Post;
   isLeft?: boolean;
 }
 
-const PostItem: React.FC<PostItemProps> = async ({ post, isLeft }) => {
-  const user = await getUserById(post.userId);
+const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await axios.get(`/api/users/${post.userId}`);
+
+        setUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+  }, [post.userId]);
 
   return (
     <div
@@ -38,7 +54,7 @@ const PostItem: React.FC<PostItemProps> = async ({ post, isLeft }) => {
       <div
         className={`max-w-md ${
           isLeft ? "ml-auto" : "mr-auto"
-        } flex flex-col justify-between`}
+        } flex flex-col justify-between min-h-[260px]`}
       >
         <div>
           {" "}
@@ -50,18 +66,7 @@ const PostItem: React.FC<PostItemProps> = async ({ post, isLeft }) => {
           </p>
           <MoreButton href={post?.id} text="Read more" />
         </div>
-        <div className="flex items-center">
-          <Avatar src={user?.image} />
-          <div className="text-sm text-slate-800 ml-2">
-            <p>by {user?.name}</p>
-            <p className="text-xs text-slate-700">
-              Created:{" "}
-              <span className=" text-slate-800">
-                {dateConverter(post.createdAt.toString())}
-              </span>
-            </p>
-          </div>
-        </div>
+        <AuthorInfo post={post} user={user!} />
       </div>
     </div>
   );
