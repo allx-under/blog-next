@@ -1,21 +1,27 @@
 import getPostById from "@/app/actions/getPostById";
+import getRandomPost from "@/app/actions/getRandomPost";
 import getUserById from "@/app/actions/getUserById";
 import AuthorInfo from "@/app/components/AuthorInfo";
 import SectionContainer from "@/app/components/SectionContainer";
 import { Post } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
+import OtherPost from "./components/OtherPost";
 
 const PostPage = async ({ params }: { params: { id: string } }) => {
   const post = await getPostById(params.id);
   const user = await getUserById(post?.userId!);
+  const randomPost = await getRandomPost(params.id);
+  const randomUser = await getUserById(randomPost?.userId!);
 
   return (
     <SectionContainer>
-      <div>
-        <div className="max-w-[50%] ">
-          <h2 className="text-3xl">{post?.title}</h2>
-          <div className="w-[100%] mt-4 relative">
+      <div className="flex gap-10 justify-between">
+        <div className="max-w-[70%] border-r border-slate-900">
+          <h2 className="text-3xl flex items-center before:block before:w-8 before:h-[1px] before:bg-slate-900 before:mr-2">
+            {post?.title}
+          </h2>
+          <div className="w-[100%] mt-4 relative drop-shadow-xl">
             <Image
               src={post?.image!}
               alt="post"
@@ -28,7 +34,13 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
 
-          <p className="mt-4">{post?.description}</p>
+          <p className="mt-4 max-w-[90%]">{post?.description}</p>
+        </div>
+        <div className="flex flex-col justify-center">
+          <p className="text-zinc-700 text-center mb-3">
+            Other post you may like
+          </p>
+          <OtherPost post={randomPost!} user={randomUser!} />
         </div>
       </div>
     </SectionContainer>

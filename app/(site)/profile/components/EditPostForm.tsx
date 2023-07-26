@@ -4,9 +4,14 @@ import Input from "@/app/components/inputs/Input";
 import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
 import { AiOutlineClose } from "react-icons/ai";
-import { FcEditImage } from "react-icons/fc";
-import React, { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { TbPhotoEdit } from "react-icons/tb";
+import React, { useCallback, useRef, useState } from "react";
+import {
+  FieldValues,
+  SubmitHandler,
+  useForm,
+  MultipleFieldErrors,
+} from "react-hook-form";
 
 import Button from "@/app/components/Button";
 import axios from "axios";
@@ -16,7 +21,7 @@ import Select from "@/app/components/inputs/Select/Select";
 import { options } from "@/app/components/inputs/Select/data";
 
 interface EditPostFormProps {
-  post: Post;
+  post?: Post;
   onClose: () => void;
 }
 
@@ -24,22 +29,37 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ post, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  const defaultValues = post
+    ? {
+        title: post?.title,
+        description: post?.description,
+        image: post?.image,
+        category: {
+          value: post?.category,
+          label:
+            post?.category.charAt(0).toUpperCase() + post?.category.slice(1),
+        },
+      }
+    : {
+        title: "",
+        description: "",
+        image: "",
+        category: {
+          value: "",
+          label: "",
+        },
+      };
+
   const {
     register,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
     watch,
   } = useForm<FieldValues>({
-    defaultValues: {
-      title: post?.title,
-      description: post?.description,
-      image: post?.image,
-      category: {
-        value: post?.category,
-        label: post?.category.charAt(0).toUpperCase() + post?.category.slice(1),
-      },
-    },
+    defaultValues,
   });
 
   const image = watch("image");
@@ -47,22 +67,72 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ post, onClose }) => {
 
   const handleUpload = (result: any) => {
     setValue("image", result?.info?.secure_url, { shouldValidate: true });
+    clearErrors("image");
   };
+
+  const onDelete = useCallback(
+    (id: string) => {
+      setIsLoading(true);
+      axios
+        .delete(`/api/posts/${id}`)
+        .then(() => {
+          onClose();
+          toast.success("Deleted");
+          router.refresh();
+        })
+        .catch(() => toast.error("Something went wrong"))
+        .finally(() => setIsLoading(false));
+    },
+    [onClose, router]
+  );
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
+    console.log(data);
 
-    axios
-      .put(`api/posts/${post.id}`, { ...data, category: data.category.value })
-      .then(() => {
-        onClose();
-        toast.success("Updated");
-        router.refresh();
-      })
-      .catch(() => toast.error("Something went wrong"))
-      .finally(() => setIsLoading(false));
+    setIsLoading(true);
+    if (!data.category.value) {
+      setError(
+        "category",
+        { type: "required", message: "Category is required" },
+        { shouldFocus: true }
+      );
+      setIsLoading(false);
+      return;
+    }
+    if (!data.image) {
+      setError(
+        "image",
+        { type: "required", message: "Image is required" },
+        { shouldFocus: true }
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    if (post) {
+      axios
+        .put(`api/posts/${post.id}`, { ...data, category: data.category.value })
+        .then(() => {
+          onClose();
+          toast.success("Updated");
+          router.refresh();
+        })
+        .catch(() => toast.error("Something went wrong"))
+        .finally(() => setIsLoading(false));
+    } else {
+      axios
+        .post("/api/posts", { ...data, category: data.category.value })
+        .then(() => {
+          onClose();
+          toast.success("Created");
+          router.refresh();
+        })
+        .catch(() => toast.error("Something went wrong"))
+        .finally(() => setIsLoading(false));
+    }
   };
 
+  console.log(errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div
@@ -71,7 +141,9 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ post, onClose }) => {
       >
         <AiOutlineClose size={20} />
       </div>
-      <h3 className="text-center text-2xl font-semibold">Edit your post</h3>
+      <h3 className="text-center text-2xl font-semibold">
+        {post ? "Edit your post" : "Add new post"}
+      </h3>
       <Input
         label="Title"
         type="text"
@@ -81,6 +153,7 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ post, onClose }) => {
         disabled={isLoading}
         required
       />
+
       <Input
         label="Description"
         type="text"
@@ -92,38 +165,54 @@ const EditPostForm: React.FC<EditPostFormProps> = ({ post, onClose }) => {
       />
       <Select
         disabled={isLoading}
-        onChange={(value) => setValue("category", value)}
+        onChange={(value) => {
+          setValue("category", value);
+          clearErrors("category");
+        }}
         value={category}
         defaultValue={category}
         label="Category"
         options={options}
+        errors={errors}
       />
       <div className="flex justify-between mb-3">
-        <div>
+        <div className="drop-shadow-xl rounded-lg overflow-hidden border border-zinc-100/20">
           <Image
-            src={image || post?.image}
+            src={image || post?.image || "/images/post.jpeg"}
             alt="post"
             width={380}
             height={350}
             className="object-cover"
           />
         </div>
-        <div className="self-end mr-auto ml-4 p-2 rounded-md border border-transparent hover:border-slate-800 hover:bg-zinc-200/80 transition">
+        <div className="self-end flex items-center mr-auto ml-4 p-1 rounded-md bg-zinc-200/40 hover:bg-zinc-200/80 transition cursor-pointer">
           <CldUploadButton
             options={{ maxFiles: 1 }}
             onUpload={handleUpload}
             uploadPreset="dmgxik12"
           >
-            <div className="text-slate-800 bg">
-              <FcEditImage size={25} /> <p>Change</p>
+            <div className="text-slate-800 flex items-center cursor-pointer">
+              <TbPhotoEdit size={25} /> <span className="ml-1">Upload</span>
             </div>
           </CldUploadButton>
         </div>
       </div>
-      <div className="flex items-center">
+      {errors.image && (
+        <span className="text-red-500 text-xs">Image is required</span>
+      )}
+      <div className="flex gap-2 items-center">
+        {post && (
+          <Button
+            text="Delete"
+            type="button"
+            disabled={isLoading}
+            warning
+            onClick={() => onDelete(post?.id!)}
+          ></Button>
+        )}
         <Button
           secondary
-          text="Update post"
+          text={post ? "Update post" : "Create post"}
           disabled={isLoading}
           type="submit"
         />

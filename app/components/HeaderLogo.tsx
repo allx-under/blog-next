@@ -8,7 +8,7 @@ const HeaderLogo = () => {
   return (
     <div
       onClick={() => router.push("/")}
-      className="flex items-center rounded-md  p-2 cursor-pointer hover:bg-slate-300/70 transition"
+      className="flex items-center rounded-md  p-2 cursor-pointer hover:bg-slate-300/70 transition w-1/3"
     >
       <div className="text-slate-900 flex items-center">
         <BsFillPostcardHeartFill size={40} />

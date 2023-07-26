@@ -1,5 +1,6 @@
 "use client";
 import { Post } from "@prisma/client";
+import { MdOutlineModeEditOutline } from "react-icons/md";
 import Image from "next/image";
 import { useState } from "react";
 import PostModal from "./PostModal";
@@ -18,10 +19,18 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
       >
         <h3 className="h-12 flex items-center pl-2">{post?.title}</h3>
         <div className="w-full h-36 relative ">
-          <Image src={post.image!} alt="post" fill className="object-cover" />
+          <Image
+            src={post.image! || "/images/post.jpeg"}
+            alt="post"
+            fill
+            className="object-cover"
+          />
         </div>
-        <div className="p-2 absolute -translate-y-96 group-hover:-translate-y-36 bg-slate-700/80 z-10 h-36 text-white transition duration-300">
+        <div className="w-full p-2 absolute -translate-y-96 group-hover:-translate-y-36 bg-slate-700/80 z-10 h-36 text-white transition duration-300">
           <p className="text-xs ">{post.description}</p>
+        </div>
+        <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] group-hover:hidden p-2 rounded-full bg-slate-900/30 text-zinc-100 transition">
+          <MdOutlineModeEditOutline size={32} />
         </div>
       </div>
       <PostModal

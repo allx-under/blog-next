@@ -1,5 +1,6 @@
 "use client";
 
+import { FieldErrors, FieldValues } from "react-hook-form";
 import ReactSelect from "react-select";
 
 interface SelectProps {
@@ -9,6 +10,7 @@ interface SelectProps {
   value?: { label: string; value: string } | null;
   onChange: (value: { label: string; value: string } | null) => void;
   options: { label: string; value: string }[];
+  errors: FieldErrors;
 }
 const Select: React.FC<SelectProps> = ({
   disabled,
@@ -16,6 +18,7 @@ const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   options,
+  errors,
 }) => {
   return (
     <div className="z-[100] mb-4">
@@ -33,9 +36,15 @@ const Select: React.FC<SelectProps> = ({
           options={options}
           menuPortalTarget={document.body}
           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-          classNames={{ control: () => "text-sm" }}
+          classNames={{
+            control: () => "text-sm ring-zinc-400 ring-1 ring-inset",
+          }}
+          required
         />
       </div>
+      {errors?.category && (
+        <span className="text-xs text-red-500">Field is required</span>
+      )}
     </div>
   );
 };

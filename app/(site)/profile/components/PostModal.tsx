@@ -6,7 +6,7 @@ import EditPostForm from "./EditPostForm";
 interface PostModalProps {
   isOpen: boolean;
   onClose: () => void;
-  post: Post;
+  post?: Post;
 }
 
 const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {

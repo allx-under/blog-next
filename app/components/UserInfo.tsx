@@ -13,8 +13,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ email, image }) => {
   const router = useRouter();
 
   return (
-    <div className="flex items-center ">
-      <p className="mr-2">{email}</p>
+    <div className="flex items-center w-1/3 justify-end">
+      <p className="mr-2 text-sm">{email}</p>
       <div
         onClick={() => router.push("/profile")}
         className="group/avatar relative cursor-pointer"

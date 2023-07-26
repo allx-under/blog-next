@@ -24,7 +24,7 @@ const Header = async () => {
       {user ? (
         <UserInfo email={user?.email!} image={user?.image!} />
       ) : (
-        <div className="flex text-lg font-bold">
+        <div className="flex text-lg font-bold w-1/3 justify-end">
           <NavLink href="/login" text="Login" />
           <NavLink href="/register" text="Register" isLast />
         </div>

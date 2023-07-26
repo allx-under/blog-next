@@ -2,10 +2,9 @@ import React from "react";
 import Avatar from "./Avatar";
 import { Post, User } from "@prisma/client";
 import dateConverter from "../utils/dateConverter";
-import getUserById from "../actions/getUserById";
 
 interface AuthorInfoProps {
-  user: User;
+  user?: User;
   post: Post;
 }
 

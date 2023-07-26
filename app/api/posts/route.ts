@@ -29,3 +29,32 @@ export async function GET(req: Request) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  try {
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const body = await req.json();
+
+    const { title, description, image, category } = body;
+
+    const newPost = await prisma.post.create({
+      data: {
+        description,
+        image,
+        title,
+        category,
+        userId: currentUser.id,
+      },
+    });
+
+    return NextResponse.json(newPost);
+  } catch (error) {
+    console.log(error, "ERROR with update post");
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
