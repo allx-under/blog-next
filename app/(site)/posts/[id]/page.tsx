@@ -7,6 +7,7 @@ import { Post } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
 import OtherPost from "./components/OtherPost";
+import RichTextRender from "@/app/components/RichTextRender";
 
 const PostPage = async ({ params }: { params: { id: string } }) => {
   const post = await getPostById(params.id);
@@ -17,11 +18,11 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
   return (
     <SectionContainer>
       <div className="flex gap-10 justify-between">
-        <div className="max-w-[70%] border-r border-slate-900">
+        <div className="w-2/3 border-r border-slate-900">
           <h2 className="text-3xl flex items-center before:block before:w-8 before:h-[1px] before:bg-slate-900 before:mr-2">
             {post?.title}
           </h2>
-          <div className="w-[100%] mt-4 relative drop-shadow-xl">
+          <div className="max-w-[95%] mt-4 relative drop-shadow-xl">
             <Image
               src={post?.image!}
               alt="post"
@@ -34,9 +35,9 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
             </div>
           </div>
 
-          <p className="mt-4 max-w-[90%]">{post?.description}</p>
+          <RichTextRender content={post?.description!} />
         </div>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col w-1/3 justify-center">
           <p className="text-zinc-700 text-center mb-3">
             Other post you may like
           </p>

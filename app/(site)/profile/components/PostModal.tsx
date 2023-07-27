@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Post } from ".prisma/client";
-import EditPostForm from "./EditPostForm";
+import PostForm from "./PostForm";
 
 interface PostModalProps {
   isOpen: boolean;
@@ -36,8 +36,8 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-xl bg-zinc-100/80 p-6 text-left align-middle shadow-xl transition-all">
-                  <EditPostForm post={post} onClose={onClose} />
+                <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-xl bg-zinc-100/80 p-6 text-left align-middle shadow-xl transition-all">
+                  <PostForm post={post} onClose={onClose} />
                 </Dialog.Panel>
               </Transition.Child>
             </div>

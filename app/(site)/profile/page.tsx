@@ -6,10 +6,12 @@ import Image from "next/image";
 import React from "react";
 import PostList from "./components/PostList";
 import AddPostBtn from "./components/AddPostBtn";
+import getAddedToFavoritePosts from "@/app/actions/getAddedToFavoritePosts";
 
 const Profile = async () => {
   const user = await getCurrentUser();
   const posts = await getUserPosts(user?.id as string);
+  const favoriteAmount = await getAddedToFavoritePosts();
 
   return (
     <SectionContainer>
@@ -18,12 +20,13 @@ const Profile = async () => {
           <h3 className="text-xl mb-2">Profile</h3>
           <div className="flex items-center">
             <Image
-              src={user?.image!}
+              src={user?.image ?? "/images/profile.jpeg"}
               alt="avatar"
               width={100}
               height={150}
               className="object-cover rounded-md"
             />
+
             <div className="ml-3 text-md text-zinc-600">
               <p>
                 Name:{" "}
@@ -43,7 +46,12 @@ const Profile = async () => {
                   {posts?.length ?? "0"}
                 </span>
               </p>
-              <p>Added to favorite:</p>
+              <p>
+                Total likes:{" "}
+                <span className="font-semibold text-slate-800">
+                  {favoriteAmount}
+                </span>
+              </p>
             </div>
           </div>
         </div>

@@ -6,7 +6,10 @@ import Header from "../components/Header";
 import AuthContext from "../context/AuthContext";
 import ToasterContext from "../context/ToasterContext";
 
-const inter = Chakra_Petch({ subsets: ["latin"], weight: "400" });
+const inter = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "My blog",

@@ -3,6 +3,8 @@ import { FiLogOut } from "react-icons/fi";
 import Avatar from "./Avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Loader from "./Loader";
 
 interface UserInfoProps {
   email: string;
@@ -25,7 +27,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ email, image }) => {
         </span>
       </div>
       <div
-        onClick={() => signOut()}
+        onClick={() => {
+          signOut();
+        }}
         className="h-9 w-9 md:h-11 md:w-11 rounded-full flex justify-center items-center ml-2 cursor-pointer hover:bg-slate-800/30 relative group transition"
       >
         <FiLogOut size={26} />

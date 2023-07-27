@@ -17,9 +17,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  favoriteIds String[] @db.ObjectId
+  favorites Post[] @relation("Favorite",fields: [favoriteIds], references: [id])
+
   accounts Account[]
   posts Post[]
-
+  
 }
 
 model Account {
@@ -36,6 +39,7 @@ model Account {
   id_token String? @db.String
   session_state String?
 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider,providerAccountId])
@@ -49,6 +53,11 @@ model Post {
   image String
   category String
   createdAt DateTime @default(now())
-  
+
+  favoriteIds String[] @db.ObjectId
+  favorites User[] @relation("Favorite",fields: [favoriteIds],references: [id])
+
   author User @relation(fields: [userId], references: [id])
 }
+
+

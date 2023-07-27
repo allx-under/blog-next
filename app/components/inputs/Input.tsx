@@ -22,9 +22,9 @@ const Input: React.FC<InputProps> = ({
   disabled,
 }) => {
   return (
-    <div className="mb-3">
+    <div className="mb-2 w-full">
       <label
-        className="block text-sm font-medium leading-6 text-slate-800"
+        className="block text-sm mb-[1px] font-medium text-slate-800"
         htmlFor={id}
       >
         {label}
