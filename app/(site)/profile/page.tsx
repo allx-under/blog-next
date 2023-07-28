@@ -47,7 +47,7 @@ const Profile = async () => {
                 </span>
               </p>
               <p>
-                Total likes:{" "}
+                My posts likes:{" "}
                 <span className="font-semibold text-slate-800">
                   {favoriteAmount}
                 </span>

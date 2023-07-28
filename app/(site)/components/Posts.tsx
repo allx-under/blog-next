@@ -15,6 +15,7 @@ interface PostsProps {
 
 const Posts: React.FC<PostsProps> = ({ posts }) => {
   const [postList, setPostList] = useState<Post[] | []>(posts);
+
   const categParam = useSearchParams().get("cat");
 
   const getPostsByCategory = useCallback(async (category: string) => {

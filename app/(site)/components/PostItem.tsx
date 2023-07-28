@@ -10,7 +10,7 @@ import Loader from "@/app/components/Loader";
 import RichTextRender from "@/app/components/RichTextRender";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface PostItemProps {
   post: Post;
@@ -21,6 +21,10 @@ const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [likes, setLikes] = useState(post?.favoriteIds.length);
+
+  const session = useSession();
+  console.log(session);
 
   const addToFavorite = () => {
     axios
@@ -28,9 +32,10 @@ const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
       .then(() => {
         toast.success("Added");
         setIsFavorite(true);
+        setLikes((prev) => (prev += 1));
       })
-      .catch(() => {
-        toast.error("Something went wrong");
+      .catch((e) => {
+        toast.error("You have to login");
       });
   };
 
@@ -40,6 +45,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
       .then(() => {
         toast.success("Removed");
         setIsFavorite(false);
+        setLikes((prev) => (prev -= 1));
       })
       .catch(() => toast.error("Something went wrong"));
   };
@@ -87,7 +93,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
           />
         </div>
         <div className="px-4 py-2 flex justify-center items-center rounded-bl-full absolute top-0 right-0  bg-slate-300/90">
-          {!isFavorite ? (
+          {!isFavorite || session?.status === "unauthenticated" ? (
             <AiOutlineHeart
               onClick={addToFavorite}
               size={20}
@@ -100,6 +106,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, isLeft }) => {
               size={20}
             />
           )}
+          <span className="ml-1 text-sm">{likes ?? "0"}</span>
         </div>
       </div>
 
