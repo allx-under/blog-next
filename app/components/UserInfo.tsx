@@ -3,8 +3,6 @@ import { FiLogOut } from "react-icons/fi";
 import Avatar from "./Avatar";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import Loader from "./Loader";
 
 interface UserInfoProps {
   email: string;
